@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Validation\Validator;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 
@@ -18,12 +19,24 @@ class CSVController extends BaseController
         return true;
     }
     
-    public function uploadCSV(Request $request) {
-        print_r($request);
-        $csv_input = $request->query('csv_upload');
+    private function updateDatabase($csvItem) {
+    }
     
-        try {
+    public function uploadCSV(Request $request) {
         
+        try {
+            print_r($request);
+    
+            $validation = $this->validate($request, [
+                'csv_upload' => 'required|mimes:csv'
+            ]);
+    
+            if ($validation->fails()) {
+                //
+                echo "Failed"; //Throw exception
+            }
+            
+            $csv_input = $request->query('csv_upload');
         } catch (\Exception $e) {
         
         }

@@ -9,9 +9,20 @@
 <body>
     <div class="container">
         <h1>Hello, {{ $version }}</h1>
+
+        {{--@if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif--}}
+
         <div id="form" class="section">
             <form action="/" method="POST">
-                <input type="file" name="csv_upload" id="csv-upload">
+                <input type="file" name="csv_upload" id="csv-upload" accept="text/csv">
                 <input type="submit" value="Upload CSV">
             </form>
         </div>
