@@ -24,7 +24,7 @@ class CSVController extends BaseController
     
         try {
         
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         
         }
         
