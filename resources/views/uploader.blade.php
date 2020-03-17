@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Trains!</title>
-    <link rel="stylesheet" href="../resources/assets/css/normalize.css">
-    <link rel="stylesheet" href="../resources/assets/css/skeleton.css">
+    <link rel="stylesheet" href="/resources/assets/css/normalize.css">
+    <link rel="stylesheet" href="/resources/assets/css/skeleton.css">
 </head>
 <body>
     <div class="container">
@@ -21,36 +21,38 @@
         @endif--}}
 
         <div id="form" class="section">
-            <form action="/" method="POST">
+            <form action="/" enctype="multipart/form-data" method="POST">
                 <input type="file" name="csv_upload" id="csv-upload" accept="text/csv">
                 <input type="submit" value="Upload CSV">
             </form>
         </div>
         <div id="results" class="section">
             <table class="u-full-width">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Age</th>
-                    <th>Sex</th>
-                    <th>Location</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Dave Gamache</td>
-                    <td>26</td>
-                    <td>Male</td>
-                    <td>San Francisco</td>
-                </tr>
-                <tr>
-                    <td>Dwayne Johnson</td>
-                    <td>42</td>
-                    <td>Male</td>
-                    <td>Hayward</td>
-                </tr>
-                </tbody>
+                @if ($header)
+                    <thead>
+                    <tr>
+                    @foreach($header as $item)
+                        <td>{{$item}}</td>
+                    @endforeach
+                    </tr>
+                    </thead>
+                @endif
+                @if ($data)
+                    <tbody>
+                    @foreach($data as $key=>$value)
+                        {{ $key }}
+                        {{ $value }}
+                        <tr>
+                            <td>Dave Gamache</td>
+                            <td>26</td>
+                            <td>Male</td>
+                            <td>San Francisco</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                @endif
             </table>
+
         </div>
     </div>
 </body>
