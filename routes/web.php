@@ -11,9 +11,7 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return view('uploader', ['version' => $router->app->version(), 'data' => '']);
-});
+$router->get('/', 'CSVController@allTrains');
 
 //Upload / POST route
 $router->post('/', 'CSVController@uploadCSV');

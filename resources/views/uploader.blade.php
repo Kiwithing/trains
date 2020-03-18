@@ -3,14 +3,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Trains!</title>
-    <link rel="stylesheet" href="/resources/assets/css/normalize.css">
-    <link rel="stylesheet" href="/resources/assets/css/skeleton.css">
+    <!-- Would normally self host -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Hello, {{ $version }}</h1>
+        <h1>Trains!</h1>
 
-        {{--@if (count($errors) > 0)
+        @if ($errors && (count($errors) > 0))
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -18,35 +19,32 @@
                     @endforeach
                 </ul>
             </div>
-        @endif--}}
+        @endif
 
         <div id="form" class="section">
-            <form action="/" enctype="multipart/form-data" method="POST">
+            <form id="uploader" action="/" enctype="multipart/form-data" method="POST">
                 <input type="file" name="csv_upload" id="csv-upload" accept="text/csv">
                 <input type="submit" value="Upload CSV">
             </form>
         </div>
         <div id="results" class="section">
             <table class="u-full-width">
-                @if ($header)
                     <thead>
                     <tr>
-                    @foreach($header as $item)
-                        <td>{{$item}}</td>
-                    @endforeach
+                        <td>ID</td>
+                        <td>Train Line</td>
+                        <td>Route Name</td>
+                        <td>Run Number</td>
+                        <td>Operator ID</td>
                     </tr>
                     </thead>
-                @endif
                 @if ($data)
                     <tbody>
                     @foreach($data as $key=>$value)
-                        {{ $key }}
-                        {{ $value }}
                         <tr>
-                            <td>Dave Gamache</td>
-                            <td>26</td>
-                            <td>Male</td>
-                            <td>San Francisco</td>
+                            @foreach($value as $column)
+                            <td>{{ $column }}</td>
+                            @endforeach
                         </tr>
                     @endforeach
                     </tbody>
