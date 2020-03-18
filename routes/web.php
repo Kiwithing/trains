@@ -11,7 +11,7 @@
 |
 */
 
-$router->get('/', 'CSVController@allTrains');
+$router->get('/', 'CSVController@index');
 
 //Upload / POST route
 $router->post('/', 'CSVController@uploadCSV');

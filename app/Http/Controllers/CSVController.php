@@ -10,6 +10,13 @@
     class CSVController extends BaseController
     {
         //Make sure there's only a .csv file sent, validate it
+        
+        public function index() {
+            $trains = $this->allTrains();
+            return view('uploader', ['data' => $trains, 'errors' => '']);
+        }
+        
+        
         /**
          * Process the upload
          *
@@ -29,7 +36,9 @@
                     'csv_upload' => 'required|file|mimetypes:text/csv,text/plain',
                 ]);
                 if ($validator->fails()) {
-                    return view('uploader', ['header' => '', 'data' => '', 'errors' => $validator->errors()]);
+                    //Should actually throw and exception here, but not sure how to pass validator errors to catch
+                    $trains = $this->allTrains();
+                    return view('uploader', ['data' => $trains, 'errors' => $validator->errors()]);
                 }
                 
                 //Check if file exists and then grab file data
@@ -42,11 +51,12 @@
                 //Assume line one is table header, iterate and add to arrays
                 $row = 1;
                 if (($handle = fopen($csv_input, "r")) !== false) {
-                    while (($csv_data = fgetcsv($handle, 5000, ",")) !== false) {
+                    while (($csv_data = fgetcsv($handle, 10000, ",")) !== false) {
                         
                         $num = count($csv_data);
-                        //Probably a more elegant way of doing this, getting header under assumption that there's always going to be one.
-                        if ($row > 1) { //Skip the header
+                        
+                        //Skip the header, skip empty rows
+                        if ($row > 1 && $this->rowCheck($csv_data) === false) {
                             //Push into DB
                             $this->createUpdateTrains($csv_data);
                         }
@@ -57,12 +67,15 @@
                 }
                 
                 //Get updated rows to display
-                $trains = Train::all()->toArray();
+                $trains = $this->allTrains();
                 
             } catch (\Exception $e) {
-                return $e;
+                //Display trains, sure there's a better way
+                $trains = $this->allTrains();
+                return view('uploader', ['data' => $trains, 'errors' => $e]);
             }
             
+            //If all is well
             return view('uploader', ['data' => $trains, 'errors' => '']);
         }
         
@@ -130,21 +143,40 @@
             $trains = [];
             
             try {
-                $trains = Train::all()->toArray();
+                $trains = Train::orderBy('run_number', 'asc')->get()->toArray();
             } catch (\Exception $e) {
+                return $e;
             }
             
-            return view('uploader', ['data' => $trains, 'errors' => '']);
+            return $trains;
         }
         
-        private function sanitizeUpload($csv)
+        /**
+         * Check for empty row
+         *
+         * @return bool
+         */
+        private function rowCheck($csvItem)
         {
-            try {
+            //Compare number of blank fields to check if all fields are blank
+            $isEmpty = false;
+            $emptyCount = 0;
+            $fieldCount = count($csvItem);
             
-            } catch (Exception $e) {
-            
+            //Check if value is values are empty, if so hit the flag value
+            foreach($csvItem as $key=>$value) {
+                if(empty($value) || !isset($value) || $value === ' ') {
+                    $emptyCount++;
+                }
             }
             
-            return true;
+            //If all are empty, flag it
+            if($emptyCount === $fieldCount) {
+                $isEmpty = true;
+            }
+            
+            return $isEmpty;
         }
+        
+        
     }
