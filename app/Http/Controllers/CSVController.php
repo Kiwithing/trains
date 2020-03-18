@@ -2,6 +2,7 @@
     
     namespace App\Http\Controllers;
     
+    use Illuminate\Support\Facades\DB;
     use App\Train;
     use Illuminate\Http\Request;
     use Laravel\Lumen\Routing\Controller as BaseController;
@@ -20,7 +21,7 @@
         {
             
             try {
-                $data_rows  = []; //Actual data from CVS
+                $data_rows = []; //Actual data from CVS
                 
                 //Set up validator
                 $validator = \Validator::make($request->all(), [
@@ -43,7 +44,7 @@
                 if (($handle = fopen($csv_input, "r")) !== false) {
                     while (($csv_data = fgetcsv($handle, 5000, ",")) !== false) {
                         
-                        $num  = count($csv_data);
+                        $num = count($csv_data);
                         //Probably a more elegant way of doing this, getting header under assumption that there's always going to be one.
                         if ($row > 1) { //Skip the header
                             //Push into DB
@@ -59,7 +60,7 @@
                 $trains = Train::all()->toArray();
                 
             } catch (\Exception $e) {
-            
+                return $e;
             }
             
             return view('uploader', ['data' => $trains, 'errors' => '']);
@@ -74,21 +75,24 @@
          */
         public function createUpdateTrains($csvItem)
         {
-            
-            print_r($csvItem);
-            
+            //TODO: Check if row is completely empty
             try {
-                if($csvItem !== null) {
-                    $newTrain = Train::updateOrCreate(
-                        ['run_number'=>$csvItem[2]],
+                if ($csvItem !== null) {
+                    
+                    //Add or update new rows. First arg = key, Second = values to update + insert
+                    $newTrain = DB::table('trains')->updateOrInsert(
                         [
-                            'train_line'=>$csvItem[0],
-                            'route_name'=>$csvItem[1],
-                            'run_number'=>$csvItem[2],
-                            'operator_id'=>$csvItem[3]
+                            'run_number' => $csvItem[2],
+                            'train_line' => $csvItem[0]
+                        ],
+                        [
+                            'train_line'  => $csvItem[0],
+                            'route_name'  => $csvItem[1],
+                            'run_number'  => $csvItem[2],
+                            'operator_id' => $csvItem[3]
                         ]
                     );
-                    $newTrain->save();
+                    
                 }
             } catch (\Exception $e) {
                 return false;
@@ -129,7 +133,7 @@
                 $trains = Train::all()->toArray();
             } catch (\Exception $e) {
             }
-    
+            
             return view('uploader', ['data' => $trains, 'errors' => '']);
         }
         
