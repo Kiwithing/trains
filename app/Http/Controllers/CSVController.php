@@ -107,7 +107,7 @@
             }
             
             //If all is well
-            return view('uploader', ['data' => $trains, 'errors' => '', 'notes' => '<span style="#0E6430">Entries added</span>']);
+            return view('uploader', ['data' => $trains, 'errors' => '', 'notes' => 'Entries added']);
         }
         
         /**
@@ -196,7 +196,7 @@
             }
     
             //If all is well
-            return view('uploader', ['data' => $trains, 'errors' => '', 'notes' => 'Item <span style="#0E6430">'. $id .'</span> deleted']);
+            return view('uploader', ['data' => $trains, 'errors' => '', 'notes' => 'Item '. $id .' deleted']);
         }
     
         /**
@@ -224,6 +224,6 @@
             }
         
             //If all is well
-            return view('uploader', ['data' => $sortTrains, 'errors' => '', 'notes' => 'Sort by <span style="#0E6430">'. $sort_type . '</span>']);
+            return view('uploader', ['data' => $sortTrains, 'errors' => '', 'notes' => 'Sort by '. $sort_type]);
         }
     }
