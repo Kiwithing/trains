@@ -19,4 +19,4 @@ See the Lumen installation documentation for more details: https://lumen.laravel
 
 * Sorting is (acending) is enabled.
 * Entries can be deleted using a deletion link.
-* CSVs handle the creation and updating of entries. Entries use the Run Number as the primary identifier, assuming that there'll only be one unique Run Number per Train Line.
+* CSVs handle the creation and updating of entries. Entries use the Run Number as the primary identifier, assuming that there'll only be no duplicate Run Numbers within a Train Line.
