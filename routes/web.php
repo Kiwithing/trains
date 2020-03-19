@@ -11,7 +11,14 @@
 |
 */
 
+//Init load
 $router->get('/', 'CSVController@index');
+
+//Delete
+$router->get('/remove/{id}', 'CSVController@deleteTrains');
 
 //Upload / POST route
 $router->post('/', 'CSVController@uploadCSV');
+
+//Sort, ascending
+$router->get('/sort/{sort_type}', 'CSVController@sortTrains');

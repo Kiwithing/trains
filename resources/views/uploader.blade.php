@@ -10,15 +10,22 @@
 <body>
     <div class="container">
         <h1>Trains!</h1>
+        <p>Add and update items via CSV upload. Delete using the links in the last column.</p>
 
         @if ($errors && (count($errors) > 0))
-            <div class="alert alert-danger">
+            <div class="error">
                 <ul>
                     @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li style="color:#640000">{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
+        @endif
+
+        @if($notes)
+        <div class="notes">
+            <h4>{{$notes}}</h4>
+        </div>
         @endif
 
         <div id="form" class="section">
@@ -31,20 +38,24 @@
             <table class="u-full-width">
                     <thead>
                     <tr>
-                        <td>ID</td>
-                        <td>Train Line</td>
-                        <td>Route Name</td>
-                        <td>Run Number</td>
-                        <td>Operator ID</td>
+                        <td><a href="/sort/id">ID</a></td>
+                        <td><a href="/sort/train_line">Train Line</a></td>
+                        <td><a href="/sort/route_name">Route Name</a></td>
+                        <td><a href="/sort/run_number">Run Number</a></td>
+                        <td><a href="/sort/operator_id">Operator ID</a></td>
+                        <td></td>
                     </tr>
                     </thead>
                 @if ($data)
                     <tbody>
                     @foreach($data as $key=>$value)
                         <tr>
-                            @foreach($value as $column)
+                            @foreach($value as $key=>$column)
                             <td>{{ $column }}</td>
                             @endforeach
+                            @if($value['id'])
+                            <td><a href="/remove/{{$value['id']}}">Delete</a></td>
+                            @endif
                         </tr>
                     @endforeach
                     </tbody>
@@ -54,5 +65,4 @@
         </div>
     </div>
 </body>
-<script src="../resources/assets/scripts/main.js"></script>
 </html>
